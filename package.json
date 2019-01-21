@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/dimitrybesson/master-controller/issues"
   },
-  "homepage": "https://github.com/dimitrybesson/master-controller#readme"
+  "homepage": "https://github.com/dimitrybesson/master-controller#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
 }
