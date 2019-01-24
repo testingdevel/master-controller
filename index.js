@@ -1,5 +1,6 @@
 const express = require('express')
 const request = require('request-promise-native')
+const apiUrls = require('./apiUrls')
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -15,6 +16,34 @@ app.use(function(req, res, next) {
   next();
 });
 
+const getTopStories = () => {
+  return request({
+    uri: `${apiUrls.apiClient}/api/v1/news/top-stories`,
+    json: true
+  })
+}
+
+const getInternationalNews = () => {
+  return request({
+    uri: `${apiUrls.apiClient}/api/v1/news/world`,
+    json: true
+  })
+}
+
+const getLocalNews = () => {
+  return request({
+    uri: `${apiUrls.apiClient}/api/v1/news/local`,
+    json: true
+  })
+}
+
+const intentToClient = {
+  "top 5 stories": getTopStories,
+  "international news": getInternationalNews,
+  "local news": getLocalNews
+}
+
+console.log(apiUrls)
 
 app.get('/', (req, res) => res.send('Welcome to the root route'))
 
@@ -26,22 +55,25 @@ app.post('/post', function (req, res) {
     request: req.body.text
   }
 
-  console.log('Sending request to NLU')
-
   return request({
-    uri: 'http://10.147.2.34:5000/',
+    uri: apiUrls.nlu,
     method: 'POST',
     body: requestBody,
     json: true
   })
-    .then(intent => {
-      console.log(intent)
 
-      return res.send(intent)
-    })
+  .then(intentObj => {
+    console.log("intent: ", intentObj)
 
+    const client = intentToClient[intentObj.intent]
+    return client()
+  })
 
-  res.send('POST request to the homepage')
+  .then(data => {
+    console.log(data)
+    return res.send(data)
+  })
+
 })
 
 app.listen(port, () => console.log(`Server is listening on port ${port}`))
