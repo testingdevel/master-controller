@@ -23,6 +23,6 @@ phases:
 artifacts:
   files:
     - index.js
-    - controllers/*
+    - apiUrls.js
     - package.json
     - node_modules/*
