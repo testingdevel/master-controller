@@ -43,17 +43,16 @@ const intentToClient = {
   "local news": getLocalNews
 }
 
-console.log(apiUrls)
-
 app.get('/', (req, res) => res.send('Welcome to the root route'))
 
 app.post('/post', function (req, res) {
-  console.log(req.body)
-  console.log("User text: ",  req.body.text)
 
   const requestBody = {
-    request: req.body.text
+    request: req.body.text,
+    language: req.body.language || 'en'
   }
+
+  console.log(requestBody)
 
   return request({
     uri: apiUrls.nlu,
@@ -63,14 +62,12 @@ app.post('/post', function (req, res) {
   })
 
   .then(intentObj => {
-    console.log("intent: ", intentObj)
 
     const client = intentToClient[intentObj.intent]
     return client()
   })
 
   .then(data => {
-    console.log(data)
     return res.send(data)
   })
 
