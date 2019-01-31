@@ -18,21 +18,21 @@ app.use(function(req, res, next) {
 
 const getTopStories = langPrefix => {
   return request({
-    uri: `${apiUrls.apiClient}/api/v1/news/top-stories`,
+    uri: `${apiUrls.apiClient}/api/v1/${langPrefix}/news/top-stories`,
     json: true
   })
 }
 
 const getInternationalNews = langPrefix => {
   return request({
-    uri: `${apiUrls.apiClient}/api/v1/news/world`,
+    uri: `${apiUrls.apiClient}/api/v1/${langPrefix}/news/world`,
     json: true
   })
 }
 
 const getLocalNews = langPrefix => {
   return request({
-    uri: `${apiUrls.apiClient}/api/v1/news/local`,
+    uri: `${apiUrls.apiClient}/api/v1/${langPrefix}/news/local`,
     json: true
   })
 }
