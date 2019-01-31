@@ -16,21 +16,21 @@ app.use(function(req, res, next) {
   next();
 });
 
-const getTopStories = () => {
+const getTopStories = langPrefix => {
   return request({
     uri: `${apiUrls.apiClient}/api/v1/news/top-stories`,
     json: true
   })
 }
 
-const getInternationalNews = () => {
+const getInternationalNews = langPrefix => {
   return request({
     uri: `${apiUrls.apiClient}/api/v1/news/world`,
     json: true
   })
 }
 
-const getLocalNews = () => {
+const getLocalNews = langPrefix => {
   return request({
     uri: `${apiUrls.apiClient}/api/v1/news/local`,
     json: true
@@ -47,12 +47,12 @@ app.get('/', (req, res) => res.send('Welcome to the root route'))
 
 app.post('/post', function (req, res) {
 
+  const userLanguage = req.body.language || 'en'
+
   const requestBody = {
     request: req.body.text,
-    language: req.body.language || 'en'
+    language: userLanguage
   }
-
-  console.log(requestBody)
 
   return request({
     uri: apiUrls.nlu,
@@ -62,9 +62,8 @@ app.post('/post', function (req, res) {
   })
 
   .then(intentObj => {
-
     const client = intentToClient[intentObj.intent]
-    return client()
+    return client(userLanguage)
   })
 
   .then(data => {
